@@ -1,0 +1,59 @@
+{% extends "base-auth.html" %}
+
+{% block content %}
+    <!-- Main content -->
+    <section class="content">
+
+      <!-- Default box -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">{{ _('Posts') }}</h3>
+          <div class="card-tools">
+            <div class="input-group input-group" style="width: 400px;">
+              <input type="text" name="table_search" id="table_search" onkeyup="searchTable('table_search', 'table')" class="form-control float-right" placeholder="Search">
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-default">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+              {% if require_permission('posts.edit') %}
+              <div class="input-group-append">
+                <a href="{{ url_for('admin.posts_new') }}"><button class="btn btn-primary btn">
+                  <i class="fa-solid fa-circle-plus"></i>
+                </button></a>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap" id="table">
+                <thead>
+                    <tr>
+                        <th>{{ _('Title') }}</th>
+                        <th>{{ _('Description') }}</th>
+                        <th>{{ _('Status') }}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for post in posts %}
+                    <tr>
+                        <td>{{ post.title }}</td>
+                        <td>{{ post.description }}</td>
+                        <td>{% if post.status == none %}draft{% else %}{{ post.status }}{% endif %}</td>
+                        <td><a href="{{ url_for('admin.posts_duplicate', post_id=post.id) }}"><button type="button" class="btn bg-gradient-default btn-xs"><i class="fa-solid fa-clone"></i></button></a>
+                        <a href="{{ url_for('admin.posts_edit', post_id=post.id) }}"><button type="button" class="btn bg-gradient-default btn-xs"><i class="fa-solid fa-pen-to-square"></i></button></a>
+                        <a href="{{ url_for('admin.posts_delete', post_id=post.id) }}"><button type="button" class="btn bg-gradient-default btn-xs"><i class="fa-solid fa-trash"></i></button></a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+{% endblock %}

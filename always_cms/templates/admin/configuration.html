@@ -1,0 +1,150 @@
+{% extends "base-auth.html" %}
+
+{% block content %}
+    <!-- Main content -->
+    <section class="content">
+
+      <!-- Default box -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Configuration</h3>
+        </div>
+        <div class="card-body">
+          <form action="configuration" method="post">
+            <div class="card-header">
+              <h3 class="card-title">{{ _('Website') }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                  <label for="sitename">{{ _('Sitename') }}</label>
+                  <input type="text" class="form-control" id="sitename" name="sitename" value="{{ config.sitename }}">
+                </div>
+                <div class="form-group">
+                  <label for="short_description">{{ _('Description') }}</label>
+                  <textarea class="form-control" id="short_description" name="short_description">{{ config.short_description }}</textarea>
+                </div>
+                <div class="form-group">
+                  <label for="date_format">{{ _('Date format') }}</label>
+                  <input type="text" class="form-control" id="date_format" name="date_format" value="{{ config.date_format }}">
+                </div>
+            </div>
+            <div class="card-header">
+              <h3 class="card-title">{{ _('Security') }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                  <label for="force_redirect_to_https">{{ _('Force redirect to HTTPS') }}</label>
+                  <select class="custom-select rounded-0" id="force_redirect_to_https" name="force_redirect_to_https">
+                    <option value="True" {% if config.force_redirect_to_https == "True" %}selected{% endif %}>{{ _('Yes') }}</option>
+                    <option value="False" {% if config.force_redirect_to_https == "False" %}selected{% endif %}>{{ _('No') }}</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="users_can_register">{{ _('Users can register') }}</label>
+                  <select class="custom-select rounded-0" id="users_can_register" name="users_can_register">
+                    <option value="True" {% if config.users_can_register == "True" %}selected{% endif %}>{{ _('Yes') }}</option>
+                    <option value="False" {% if config.users_can_register == "False" %}selected{% endif %}>{{ _('No') }}</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="registration_confirmation">{{ _('Registration must be confirmed by email') }}</label>
+                  <select class="custom-select rounded-0" id="registration_confirmation" name="registration_confirmation">
+                    <option value="True" {% if config.registration_confirmation == "True" %}selected{% endif %}>{{ _('Yes') }}</option>
+                    <option value="False" {% if config.registration_confirmation == "False" %}selected{% endif %}>{{ _('No') }}</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="comments_enabled">{{ _('Comments enabled') }}</label>
+                  <select class="custom-select rounded-0" id="comments_enabled" name="comments_enabled">
+                    <option value="True" {% if config.comments_enabled == "True" %}selected{% endif %}>{{ _('Yes') }}</option>
+                    <option value="False" {% if config.comments_enabled == "False" %}selected{% endif %}>{{ _('No') }}</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="comments_moderation">{{ _('Comments must be manually approved') }}</label>
+                  <select class="custom-select rounded-0" id="comments_moderation" name="comments_moderation">
+                    <option value="True" {% if config.comments_moderation == "True" %}selected{% endif %}>{{ _('Yes') }}</option>
+                    <option value="False" {% if config.comments_moderation == "False" %}selected{% endif %}>{{ _('No') }}</option>
+                  </select>
+                </div>
+            </div>
+            <div class="card-header">
+              <h3 class="card-title">Mail Server</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                  <label for="mail_host">{{ _('Mail Host') }}</label>
+                  <input type="text" class="form-control" id="mail_host" name="mail_host" value="{{ config.mail_host }}">
+                </div>
+                <div class="form-group">
+                  <label for="mail_port">{{ _('Mail Port') }}</label>
+                  <input type="text" class="form-control" id="mail_port" name="mail_port" value="{{ config.mail_port }}">
+                </div>
+                <div class="form-group">
+                  <label for="mail_username">{{ _('Mail Username') }}</label>
+                  <input type="text" class="form-control" id="mail_username" name="mail_username" value="{{ config.mail_username }}">
+                </div>
+                <div class="form-group">
+                  <label for="mail_password">{{ _('Mail Password') }}</label>
+                  <input type="password" class="form-control" id="mail_password" name="mail_password" placeholder="{{ _('Unmodified if empty') }}">
+                </div>
+                <div class="form-group">
+                  <label for="mail_secure">{{ _('Mail Secure') }}</label>
+                  <select class="custom-select rounded-0" id="mail_secure" name="mail_secure">
+                    <option value="False" {% if config.mail_secure == "False" %}selected{% endif %}>{{ _('No') }}</option>
+                    <option value="SSL" {% if config.mail_secure == "SSL" %}selected{% endif %}>{{ _('SSL') }}</option>
+                    <option value="TLS" {% if config.mail_secure == "TLS" %}selected{% endif %}>{{ _('TLS') }}</option>
+                  </select>
+                </div>
+            </div>
+            <div class="card-header">
+              <h3 class="card-title">Upload</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                  <label for="default_upload_location">{{ _('Default Upload Location') }}</label>
+                  <select class="custom-select rounded-0" id="default_upload_location" name="default_upload_location">
+                    <option value="local" {% if config.default_upload_location == "local" %}selected{% endif %}>{{ _('Local') }}</option>
+                    <option value="s3" {% if config.default_upload_location == "s3" %}selected{% endif %}>{{ _('S3') }}</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="s3_endpoint_url">{{ _('S3 Endpoint URL') }}</label>
+                  <input type="text" class="form-control" id="s3_endpoint_url" name="s3_endpoint_url" value="{{ config.s3_endpoint_url }}">
+                </div>
+                <div class="form-group">
+                  <label for="s3_use_ssl">{{ _('S3 Use SSL') }}</label>
+                  <select class="custom-select rounded-0" id="s3_use_ssl" name="s3_use_ssl">
+                    <option value="True" {% if config.s3_use_ssl == "True" %}selected{% endif %}>{{ _('True') }}</option>
+                    <option value="False" {% if config.s3_use_ssl == "False" %}selected{% endif %}>{{ _('False') }}</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="s3_region_name">{{ _('S3 Region Name') }}</label>
+                  <input type="text" class="form-control" id="s3_region_name" name="s3_region_name" value="{{ config.s3_region_name }}">
+                </div>
+                <div class="form-group">
+                  <label for="s3_bucket_name">{{ _('S3 Bucket Name') }}</label>
+                  <input type="text" class="form-control" id="s3_bucket_name" name="s3_bucket_name" value="{{ config.s3_bucket_name }}">
+                </div>
+                <div class="form-group">
+                  <label for="s3_access_key_id">{{ _('S3 Access Key ID') }}</label>
+                  <input type="text" class="form-control" id="s3_access_key_id" name="s3_access_key_id" value="{{ config.s3_access_key_id }}">
+                </div>
+                <div class="form-group">
+                  <label for="s3_secret_access_key">{{ _('S3 Secret Access Key') }}</label>
+                  <input type="text" class="form-control" id="s3_secret_access_key" name="s3_secret_access_key" value="{{ config.s3_secret_access_key }}">
+                </div>
+            </div>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-primary btn-block">{{ _('Submit') }}</button>
+          </form>
+          <br/><a href="{{ url_for('admin.configurations_mail_test') }}"><button class="btn btn-warning btn-block">{{ _('Send a test email') }}</button></a>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+{% endblock %}

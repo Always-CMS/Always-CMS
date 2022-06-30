@@ -1,0 +1,8 @@
+{
+    "identifier": "classic",
+    "name": "Default Template of Always CMS",
+    "author": "0pc0deFR",
+    "license": "BSD",
+    "description": "This is the default template installed with Always CMS.",
+    "version": "1.0.0"
+}

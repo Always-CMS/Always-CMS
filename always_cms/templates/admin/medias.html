@@ -1,0 +1,91 @@
+{% if editor %}
+{% extends "base-editor.html" %}
+{% else %}
+{% extends "base-auth.html" %}
+{% endif %}
+
+{% block content %}
+    <!-- Main content -->
+    <section class="content">
+      {% if not editor %}
+      <!-- Upload box -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">{{ _('Uploads') }}</h3>
+        </div>
+        <div class="card-body">
+            {{ dropzone.create(action='admin.uploads') }}
+        </div>
+      </div>
+      <!-- /.card -->
+      {% endif %}
+      <!-- Default box -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">{{ _('Medias') }}</h3>
+          <div class="card-tools">
+            <div class="input-group input-group" style="width: 400px;">
+              <input type="text" name="table_search" id="table_search" onkeyup="searchTable('table_search', 'table')" class="form-control float-right" placeholder="Search">
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-default">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap" id="table">
+                <thead>
+                    <tr>
+                        <th>{{ _('Title') }}</th>
+                        <th>{{ _('Extension') }}</th>
+                        <th>{{ _('Alt text') }}</th>
+                        <th>{{ _('Description') }}</th>
+                        <th>{{ _('Created at') }}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for media in medias %}
+                    <tr>
+                        <td>{{ media.title }}</td>
+                        <td>{{ media.extension }}</td>
+                        <td>{{ media.alt_text }}</td>
+                        <td>{{ media.description }}</td>
+                        <td>{{ media.created_at }}</td>
+                        {% if not editor %}
+                        <td><a href="{{ get_media_url(media.id) }}"><button type="button" class="btn bg-gradient-default btn-xs"><i class="fa-solid fa-eye"></i></button></a>
+                        <a href="{{ url_for('admin.medias_edit', media_id=media.id) }}"><button type="button" class="btn bg-gradient-default btn-xs"><i class="fa-solid fa-pen-to-square"></i></button></a>
+                        <a href="{{ url_for('admin.medias_delete', media_id=media.id) }}"><button type="button" class="btn bg-gradient-default btn-xs"><i class="fa-solid fa-trash"></i></button></a></td>
+                        {% else %}
+                        <td><button type="button" onclick="returnFileUrl('{{ url_for('main.uploaded_files', filename='{}.{}'.format(media.id, media.extension) ) }}')" class="btn bg-gradient-default btn-xs"><i class="fa-solid fa-eye"></i></button></a></td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+    <script>
+        // Helper function to get parameters from the query string.
+        function getUrlParam( paramName ) {
+            var reParam = new RegExp( '(?:[\?&]|&)' + paramName + '=([^&]+)', 'i' );
+            var match = window.location.search.match( reParam );
+
+            return ( match && match.length > 1 ) ? match[1] : null;
+        }
+        // Simulate user action of selecting a file to be returned to CKEditor.
+        function returnFileUrl(fileUrl) {
+
+            var funcNum = getUrlParam( 'CKEditorFuncNum' );
+            window.opener.CKEDITOR.tools.callFunction( funcNum, fileUrl );
+            window.close();
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends "base-auth.html" %}
+
+{% block content %}
+    <!-- Main content -->
+    <section class="content">
+
+      <!-- Default box -->
+      <div class="card">
+        <div class="card-header d-flex p-0">
+          <h3 class="card-title p-3">Configuration</h3>
+          <ul class="nav nav-pills ml-auto p-2">
+            <li class="nav-item"><a class="nav-link active" href="#identity" data-toggle="tab">Identity</a></li>
+            <li class="nav-item"><a class="nav-link" href="#security" data-toggle="tab">Security</a></li>
+          </ul>
+        </div><!-- /.card-header -->
+        <div class="card-body">
+          <div class="tab-content">
+            <div class="tab-pane active" id="identity">
+              <div class="card-header">
+                <h3 class="card-title">Identity</h3>
+              </div>
+              <form method="post">
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ user.name }}">
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
+                  </div>
+                </div>
+                <input type="hidden" name="block" value="identity">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-primary">{{ _('Submit') }}</button>
+              </form>
+            </div>
+            <!-- /.tab-pane -->
+            <div class="tab-pane" id="security">
+              <div class="card-header">
+                <h3 class="card-title">Password</h3>
+              </div>
+              <form method="post">
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="current_password">Current password</label>
+                    <input type="password" class="form-control" id="current_password" name="current_password" placeholder="Current password">
+                  </div>
+                  <div class="form-group">
+                    <label for="new_password">New password</label>
+                    <input type="password" class="form-control" id="new_password" name="new_password" placeholder="New password">
+                  </div>
+                  <div class="form-group">
+                    <label for="repeat_new_password">Repeat new password</label>
+                    <input type="password" class="form-control" id="repeat_new_password" name="repeat_new_password" placeholder="Repeat new password">
+                  </div>
+                </div>
+                <input type="hidden" name="block" value="security">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-primary btn-block">{{ _('Submit') }}</button>
+              </form>
+              <div class="card-header">
+                <h3 class="card-title">2 Factor Authentication</h3>
+              </div>
+              {% if mfa_hash %}
+              <form method="post">
+                <div class="card-body">
+                  <center><img src="{{ qrcode(qrcode_data) }}"></center>
+                  <div class="form-group">
+                    <label for="otp_code">OTP code</label>
+                    <input type="text" class="form-control" id="otp_code" name="otp_code" placeholder="OTP code">
+                  </div>
+                </div>
+                <input type="hidden" name="block" value="security">
+                <input type="hidden" name="mfa_hash" value="{{ mfa_hash }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-primary btn-block">{{ _('Submit') }}</button>
+              </form>
+              {% else %}
+              <form method="post">
+                <input type="hidden" name="disable_mfa" value="true">
+                <input type="hidden" name="block" value="security">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-warning btn-block">Disable 2 Factor Authentication</button>
+              </form>
+              {% endif %}
+            </div>
+            <!-- /.tab-pane -->
+          </div>
+          <!-- /.tab-content -->
+        </div><!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+{% endblock %}

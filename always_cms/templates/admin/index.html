@@ -1,0 +1,114 @@
+{% extends "base-auth.html" %}
+
+{% block content %}
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>{{ posts_count }}</h3>
+
+                <p>{{ _('Posts') }}</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-bag"></i>
+              </div>
+              <a href="{{ url_for('admin.posts_list') }}" class="small-box-footer">{{ ('View more') }} <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>{{ comments_count }}</h3>
+
+                <p>{{ _('Comments') }}</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-stats-bars"></i>
+              </div>
+              <a href="{{ url_for('admin.comments_list') }}" class="small-box-footer">{{ ('View more') }} <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3>{{ pages_count }}</h3>
+
+                <p>{{ _('Pages') }}</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+              </div>
+              <a href="{{ url_for('admin.pages_list') }}" class="small-box-footer">{{ ('View more') }} <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3>{{ users_count }}</h3>
+
+                <p>{{ _('Users') }}</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-person-add"></i>
+              </div>
+              <a href="{{ url_for('admin.users_list') }}" class="small-box-footer">{{ ('View more') }} <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+        </div>
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row">
+          <!-- Left col -->
+          <section class="col-lg-7">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">
+                  <i class="fa-solid fa-pen"></i>
+                  {{ _('Draft Post') }}
+                </h3>
+              </div><!-- /.card-header -->
+              <div class="card-body">
+                <form action="/admin/posts/new" method="post">
+                  <div class="form-group">
+                    <label for="title">{{ _('Title') }} <small id="count_chars">0</small><small> of 55 characters recommended</small></label>
+                    <input type="text" class="form-control" id="title" name="title" onkeyup="count_chars(this);" placeholder="{{ _('New post') }}">
+                  </div>
+                  <div class="form-group">
+                    <label for="content">{{ _('Content') }}</label>
+                    <textarea class="form-control" id="ckeditor" name="ckeditor" placeholder="{{ _('An idea ?') }}"></textarea>
+                  </div>
+                  <input type="hidden" name="status" value="draft">
+                  <input type="hidden" name="type" value="{{ default_type_post }}">
+                  <input type="hidden" name="model" value="{{ default_model_post }}">
+                  <input type="hidden" name="description" value="">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="submit" class="btn btn-primary btn-block">{{ _('Submit') }}</button>
+                </form>
+              </div><!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </section>
+          <!-- /.Left col -->
+          <!-- right col -->
+          <section class="col-lg-5">
+
+          </section>
+          <!-- right col -->
+        </div>
+        <!-- /.row (main row) -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+{% endblock %}

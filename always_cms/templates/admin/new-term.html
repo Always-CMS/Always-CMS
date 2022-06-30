@@ -1,0 +1,39 @@
+{% extends "base-auth.html" %}
+
+{% block content %}
+    <!-- Main content -->
+    <section class="content">
+
+      <!-- Default box -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Categories and Terms</h3>
+        </div>
+        <div class="card-body">
+          <form action="new" method="post">
+            <div class="form-group">
+              <label for="name">{{ _('Name') }} <small id="count_chars">0</small><small> of 55 characters recommended</small></label>
+              <input type="text" class="form-control" id="name" name="name" onkeyup="count_chars(this);" placeholder="{{ _('New category or term') }}">
+            </div>
+            <div class="form-group">
+              <label for="description">{{ _('Description') }}</label>
+              <textarea class="form-control" id="description" name="description" placeholder="{{ _('Description') }}"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="classification">{{ _('Classification') }}</label>
+              <select class="custom-select rounded-0" id="classification" name="classification">
+                <option value="category">{{ _('Category') }}</option>
+                <option value="tag">{{ _('Tag') }}</option>
+              </select>
+            </div>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-primary btn-block">{{ _('Submit') }}</button>
+          </form>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+{% endblock %}

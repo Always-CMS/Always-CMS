@@ -1,0 +1,84 @@
+{% extends "base-auth.html" %}
+
+{% block content %}
+    <!-- Main content -->
+    <section class="content">
+
+      <!-- Default box -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Post</h3>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            <div class="form-group">
+              <label for="title">{{ _('Title') }} <small id="count_chars">0</small><small> of 55 characters recommended</small></label>
+              <input type="text" class="form-control" id="title" name="title" onkeyup="count_chars(this);" value="{{ post.title }}">
+            </div>
+            <div class="form-group">
+                <label for="content">{{ _('Content') }}</label>
+                {{ ckeditor.create(value=post.body) }}
+            </div>
+            <div class="form-group">
+              <label for="status">{{ _('Status') }}</label>
+              <select class="custom-select rounded-0" id="status" name="status">
+                <option value="draft">{{ _('Draft') }}</option>
+                <option value="private" {% if post.status == "private" %}selected{% endif %}>{{ _('Private') }}</option>
+                <option value="publish" {% if post.status == "publish" %}selected{% endif %}>{{ _('Publish') }}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="description">{{ _('Meta description') }}</label>
+              <textarea class="form-control" id="description" name="description">{{ post.description }}</textarea>
+            </div>
+            <div class="form-group">
+              <label>{{ _('Categories') }}</label>
+              <select class="form-control select2" id="categories" name="categories" multiple="multiple" style="width: 100%;" data-placeholder="{{ _('Select a categories') }}">
+                {% for category in categories %}
+                <option value="{{ category.id }}" {% if category in post_term %}selected{% endif %}>{{ category.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label>{{ _('Tags') }}</label>
+              <select class="form-control select2" id="tags" name="tags" multiple="multiple" style="width: 100%;" data-placeholder="{{ _('Select a tags') }}">
+                {% for tag in tags %}
+                <option value="{{ tag.id }}" {% if tag in post_term %}selected{% endif %}>{{ tag.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="status">{{ _('Types') }}</label>
+              <select class="custom-select rounded-0" id="type" name="type">
+                {% for type in types %}
+                <option value="{{ type.id }}" {% if type.id == post.type_id %}selected{% endif %}>{{ type.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="status">{{ _('Models') }}</label>
+              <select class="custom-select rounded-0" id="model" name="model">
+                {% for model in models %}
+                <option value="{{ model.id }}" {% if model.id == post.model_id %}selected{% endif %}>{{ model.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="schedule">{{ _('Schedule the post') }}</label>
+              {% if post.published_at %}
+              <input type="text" class="form-control" id="schedule" name="schedule" placeholder="{{ _('Now') }}" value="{{ post.published_at }}">
+              {% else %}
+              <input type="text" class="form-control" id="schedule" name="schedule" placeholder="{{ _('Now') }}">
+              {% endif %}
+            </div>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-primary btn-block">{{ _('Submit') }}</button>
+          </form>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+{% endblock %}

@@ -1,0 +1,319 @@
+{% extends "base-auth.html" %}
+
+{% block content %}
+    <!-- Main content -->
+    <section class="content">
+
+      <!-- Default box -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">{{ _('Preview') }}</h3>
+        </div>
+        <div class="card-body">
+          <center><img class="img-fluid" src="{{ url_for('main.uploaded_files', filename='{}-work.{}'.format(media.id, media.extension) ) }}" style="width: 50%;"></center>
+          <form method="post">
+            <div class="form-group">
+              <label for="alt_text">{{ _('Alternative Text') }}</label>
+              <input type="text" class="form-control" id="alt_text" name="alt_text" value="{{ media.alt_text }}">
+            </div>
+            <div class="form-group">
+              <label for="description">{{ _('Description') }}</label>
+              <textarea class="form-control" id="description" name="description" placeholder="{{ _('Description') }}">{{ media.description }}</textarea>
+            </div>
+            <input type="hidden" name="edit" value="values">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-primary btn-block">{{ _('Submit') }}</button>
+          </form>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            <input type="hidden" name="edit" value="reload_source">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-primary btn-block">{{ _('Reload Original') }}</button>
+          </form>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            <input type="hidden" name="edit" value="replace_original">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-primary btn-block">{{ _('Replace Original') }}</button>
+          </form>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">{{ _('Simple enhance') }}</h3>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            <div class="form-group">
+              <div for="color"><b>Color</b></div>
+              <small>0 for black/white, 3 for oversaturated</small>
+              <div class="row">
+                <div class="col-11">
+                  <input type="range" class="custom-range" min="0" max="3" step="0.1" value={{ slider['color'] }} id="color" name="color" onchange="updateTextInput('color_value', this.value);">
+                </div>
+                <div class="col-1 text-center">
+                  <span id="color_value" style="color: slateblue">1</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div for="brightness"><b>Brightness</b></div>
+              <small>0 for complete black</small>
+              <div class="row">
+                <div class="col-11">
+                  <input type="range" class="custom-range" min="0" max="3" step="0.1" value={{ slider['bright'] }} id="brightness" name="bright" onchange="updateTextInput('brightness_value', this.value);">
+                </div>
+                <div class="col-1 text-center">
+                  <span id="brightness_value" style="color: slateblue">1</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div for="contrast"><b>Contrast</b></div>
+              <small>0 for solid grey image</small>
+              <div class="row">
+                <div class="col-11">
+                  <input type="range" class="custom-range" min="0" max="3" step="0.1" value={{ slider['contrast'] }} id="contrast" name="contrast" onchange="updateTextInput('contrast_value', this.value);">
+                </div>
+                <div class="col-1 text-center">
+                  <span id="contrast_value" style="color: slateblue">1</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div for="sharpness"><b>Sharpness</b></div>
+              <div class="row">
+                <div class="col-11">
+                  <input type="range" class="custom-range" min="0" max="3" step="0.1" value={{ slider['sharp'] }} id="sharpness" name="sharp" onchange="updateTextInput('sharpness_value', this.value);">
+                </div>
+                <div class="col-1 text-center">
+                  <span id="sharpness_value" style="color: slateblue">1</span>
+                </div>
+              </div>              
+            </div>
+            <input type="hidden" name="edit" value="enhance">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-primary btn-block">{{ _('Submit') }}</button>
+          </form>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">{{ _('Hue shift') }}</h3>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            <div class="form-group">
+              <div for="color"><b>Hue</b></div>
+              <small>Ranges from -180° to 180°</small>
+              <div class="row mb-2">
+                <div class="col-11">
+                  <input type="range" class="custom-range" min="-180" max="180" step="1" value="0" id="hue_angle" name="hue_angle" onchange="updateTextInput('hue_value', this.value); updateColorValues('domin_colors', this.value);">
+                </div>
+                <div class="col-1 text-center">
+                  <span id="hue_value" style="color: slateblue">0</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="row" id="domin_colors">
+                <div class="col-4 ml-3 p-2 rounded" style="background-color: rgb{{ colors[0][1] }}">
+                </div>
+                <div class="col-2 mx-auto p-2 rounded" style="background-color: rgb{{ colors[1][1] }}">
+                </div>
+                <div class="col-2 mx-auto p-2 rounded" style="background-color: rgb{{ colors[2][1] }}">
+                </div>
+                <div class="col-1 mx-auto p-2 rounded" style="background-color: rgb{{ colors[3][1] }}">
+                </div>
+                <div class="col-1 mr-3 p-2 rounded" style="background-color: rgb{{ colors[4][1] }}">
+                </div>
+              </div>
+            </div>
+  
+            <input type="hidden" name="edit" value="hue">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-primary btn-block">{{ _('Submit') }}</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">{{ _('Apply filters') }}</h3>
+        </div>
+        <div class="card-body">
+          <div class="col-sm-5 mx-auto my-2 p-2 text-center stripes rounded">
+            <div class="h5">{{ _('Blur') }}</div>
+            <form method="post">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" name="blur_button" value="0" class="btn btn-primary">Blur</button>
+              <button type="submit" name="blur_button" value="1" class="btn btn-primary">BoxBlur(1)</button>
+              <button type="submit" name="blur_button" value="2" class="btn btn-primary">GaussianBlur</button>
+            </form>
+          </div>
+          <div class="col-sm-5 mx-auto my-2 p-2 text-center stripes rounded">
+            <div class="h5">{{ _('Sharpen') }}</div>
+            <form method="post">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" name="sharpen_button" value="0" class="btn btn-primary">Sharpen</button>
+              <button type="submit" name="sharpen_button" value="1" class="btn btn-primary">Detail</button>
+              <button type="submit" name="sharpen_button" value="2" class="btn btn-primary">UnsharpMask</button>
+            </form>
+          </div>
+
+          <div class="col-sm-5 mx-auto my-2 p-2 text-center stripes rounded">
+            <div class="h5">{{ _('Edge Enhance') }}</div>
+            <form method="post">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <div class="my-1">
+                <button type="submit" name="edge_button" value="0" class="btn btn-primary">EdgeEnhance</button>
+                <button type="submit" name="edge_button" value="1" class="btn btn-primary">EdgeEnhMore</button>
+              </div>
+              <div>
+                <button type="submit" name="edge_button" value="2" class="btn btn-primary">Emboss</button>
+                <button type="submit" name="edge_button" value="3" class="btn btn-primary">FindEdges</button>
+                <button type="submit" name="edge_button" value="4" class="btn btn-primary">Contour</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="col-sm-5 mx-auto my-2 p-2 text-center stripes rounded">
+            <div class="h5">{{ _('Smooth') }}</div>
+            <form method="post">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" name="smooth_button" value="0" class="btn btn-primary">Smooth</button>
+              <button type="submit" name="smooth_button" value="1" class="btn btn-primary">SmoothMore</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">{{ _('Rotate / Resize / Crop') }}</h3>
+        </div>
+        <div class="card-body">
+
+          <small class="text-success"><b>Your image size is:<br>({{ width }}, {{ height}})</b></small>
+
+          <div class="row">
+            <div class="col-sm-12 mx-auto my-2 p-2 text-center stripes rounded">
+              <form method="post">
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Angle</span>
+                  </div>
+                  <input type="text" class="form-control" name="angle" placeholder="angle">
+                </div>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" name="rotate_button" value="rotate" class="btn btn-primary btn-block"><b>Rotate</b></button>
+              </form>
+            </div>
+
+            <div class="col-sm-12 mx-auto my-2 p-2 text-center stripes rounded">
+              <form method="post">
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Width</span>
+                  </div>
+                  <input type="text" class="form-control" name="width" placeholder="width">
+                </div>
+
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Height</span>
+                  </div>
+                  <input type="text" class="form-control" name="height" placeholder="height">
+                </div>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" name="resize_button" value="resize" class="btn btn-primary btn-block"><b>Resize</b></button>
+              </form>
+            </div>
+
+            <div class="col-sm-12 mx-auto my-2 p-2 text-center stripes rounded">
+              <img src="{{ url_for('main.uploaded_files', filename='{}-work.{}'.format(media.id, media.extension) ) }}" class="rounded" style="max-width: 100%" id="cropper"/>
+              <div class="my-2"></div>
+              <form method="post">
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="">Start coords.</span>
+                  </div>
+                  <input type="text" name="start_x" class="form-control" placeholder="x" id="start_x" readonly>
+                  <input type="text" name="start_y" class="form-control" placeholder="y" id="start_y" readonly>
+                </div>
+
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="">End coords.</span>
+                  </div>
+                  <input type="text" name="end_x" class="form-control" placeholder="x + w" id="end_x" readonly>
+                  <input type="text" name="end_y" class="form-control" placeholder="y + h" id="end_y" readonly>
+                </div>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" name="crop_button" value="crop" class="btn btn-primary btn-block"><b>Crop</b></button>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="container" style="height: 2%"></div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS, then FontAwesome-->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.0.4/jscolor.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.min.js"></script>
+    <script>
+      function updateTextInput(id, val) {
+          element = document.getElementById(id);
+          element.innerHTML = val;
+        }
+      updateTextInput('color_value', {{ slider['color'] }});
+      updateTextInput('brightness_value', {{ slider['bright'] }});
+      updateTextInput('contrast_value', {{ slider['contrast'] }});
+      updateTextInput('sharpness_value', {{ slider['sharp'] }});
+    </script>
+    <script>
+      function updateColorValues(id, val) {
+          parent = document.getElementById(id);
+          var i;
+
+          for(i = 0; i < 5; i++)
+            parent.children[i].style.filter = 'hue-rotate(' + val +'deg)';
+        }
+    </script>
+    <script>
+      var image = document.getElementById('cropper');
+      var image_allign = $("#align").width() - 18;
+      var cropper = new Cropper(image, {
+        viewMode: 2,
+        background: false,
+        movable: false,
+        zoomable: false,
+        rotatable: false,
+        strict: true,
+        minContainerWidth: image_allign,
+        minContainerHeight: 125,
+        crop(event) {
+          document.getElementById("start_x").value = Math.round(event.detail.x);
+          document.getElementById("start_y").value = Math.round(event.detail.y);
+          document.getElementById("end_x").value = Math.round(event.detail.x + event.detail.width);
+          document.getElementById("end_y").value = Math.round(event.detail.y + event.detail.height);
+        },
+      });
+    </script>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+{% endblock %}

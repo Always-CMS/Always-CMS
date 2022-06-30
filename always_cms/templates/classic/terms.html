@@ -1,0 +1,100 @@
+{% extends "classic/base.html" %}
+
+{% block content %}
+
+        <!-- Page Header-->
+
+        <header class="masthead">
+
+            <div class="container position-relative px-4 px-lg-5">
+
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+
+                        <div class="site-heading">
+
+                            <h1>{{ g.always_cms_config.sitename }}</h1>
+
+                            <span class="subheading">{{ g.always_cms_config.short_description }}</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- Main Content-->
+
+        <div class="container px-4 px-lg-5">
+
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+
+                <div class="col-md-10 col-lg-8 col-xl-7">
+
+                    {% set posts = get_posts_by_term( term ) %}
+
+                    {% if posts %}
+
+                    {% for post in posts %}
+
+                    <!-- Post preview-->
+
+                    <div class="post-preview">
+
+                        <a href="{{ url_for('main.get_post_content', type=post.type.name, permalink=post.permalink) }}">
+
+                            <h2 class="post-title">{{ post.title }}</h2>
+
+                            <h3 class="post-subtitle">{{ post.description }}</h3>
+
+                        </a>
+
+                        <p class="post-meta">
+
+                            {{ _('Posted by') }}
+
+                            <a href="#!">{{ post.author.name }}</a>
+                            {{ _('on') }} {{ date_format(post.published_at) }}
+
+                        </p>
+
+                    </div>
+
+                    <!-- Divider-->
+
+                    <hr class="my-4" />
+
+                    {% endfor %}
+
+                    <!-- Pager-->
+
+                    <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a></div>
+
+                    {% else %}
+
+                    <div class="post-preview">
+
+                        <h2 class="post-title">{{ _('We are sorry, no articles are available.') }}</h2>
+
+                        <a href="/"><h3 class="post-subtitle">{{ _('Back to home') }}</h3></a>
+
+                    </div>
+
+                    <!-- Divider-->
+
+                    <hr class="my-4" />
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+{% endblock %}

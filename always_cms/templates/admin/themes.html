@@ -1,0 +1,47 @@
+{% extends "base-auth.html" %}
+
+{% block content %}
+    <!-- Main content -->
+    <section class="content">
+
+      <!-- Default box -->
+      <div class="card">
+        <div class="card-header d-flex p-0">
+          <h3 class="card-title p-3">{{ _('Themes') }}</h3>
+        </div>
+        <div class="card-body table-responsive p-0">
+          <table class="table table-hover text-nowrap">
+              <thead>
+                  <tr>
+                      <th>{{ _('Name') }}</th>
+                      <th>{{ _('Version') }}</th>
+                      <th>{{ _('Author') }}</th>
+                      <th>{{ _('License') }}</th>
+                      <th>{{ _('Description') }}</th>
+                      <th>{{ _('Enabled') }}</th>
+                      <th></th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for template in templates %}
+                  <tr>
+                      <td>{{ template.name }}</td>
+                      <td>{{ template.version }}</td>
+                      <td>{{ template.author }}</td>
+                      <td>{{ template.license }}</td>
+                      <td>{{ template.description }}</td>
+                      <td>{{ template.enabled }}</td>
+                      <td>{% if not template.enabled %} <a href="{{ url_for('admin.theme_enable', theme=template.identifier) }}">{{ _('Enable') }}</a>{% endif %}</td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+          </div>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+{% endblock %}

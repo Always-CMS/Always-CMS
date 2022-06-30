@@ -1,0 +1,13 @@
+{
+  "last_updated": "01/01/1970",
+  "dashboard_title": "Mon tableau de bord",
+  "message": "message",
+  "view": "Voir",
+  "share": "Partager",
+  "user": "Utilisateur",
+  "general_stat": "Statistiques générales",
+  "new_visitor": "Nouveau visiteur",
+  "new_user": "Nouvel utilisateur",
+  "country": "Pays",
+  "country_list": {"germany": "Allemagne", "united_kingdom": "Grande-Bretagne", "russia": "Russie", "spain": "Espagne", "india": "Inde", "france": "France"}
+}

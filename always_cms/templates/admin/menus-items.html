@@ -1,0 +1,67 @@
+{% extends "base-auth.html" %}
+
+{% block content %}
+    <!-- Main content -->
+    <section class="content">
+
+      <!-- Default box -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">{{ _('Menus items') }}</h3>
+          <div class="card-tools">
+            <div class="input-group input-group" style="width: 400px;">
+              <input type="text" name="table_search" id="table_search" onkeyup="searchTable('table_search', 'table')" class="form-control float-right" placeholder="Search">
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-default">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+              {% if require_permission('menus.edit') %}
+              {% if menu_edit %}
+              <div class="input-group-append">
+                <a href="{{ url_for('admin.menus_new') }}"><button class="btn btn-primary btn">
+                  <i class="fa-solid fa-circle-plus"></i>
+                </button></a>
+              </div>
+              {% else %}
+              <div class="input-group-append">
+                <a href="{{ url_for('admin.menus_item_new_post', menu_id=menu_id, parent_id=item_id) }}"><button class="btn btn-primary btn">
+                  <i class="fa-solid fa-circle-plus"></i>
+                </button></a>
+              </div>
+              {% endif %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="card-body table-responsive p-0">
+          <table class="table table-hover text-nowrap">
+              <thead>
+                  <tr>
+                      <th>{{ _('Name') }}</th>
+                      <th>{{ _('Link') }}</th>
+                      <th>{{ _('Target') }}</th>
+                      <th></th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for item in items %}
+                  <tr>
+                      <td>{{ item.name }}</td>
+                      <td>{{ item.link }}</td>
+                      <td>{{ item.target }}</td>
+                      <td><a href="{{ url_for('admin.menus_item_list', menu_id=item.menu_id, item_id=item.id) }}"><button type="button" class="btn bg-gradient-default btn-xs"><i class="fas fa-bars"></i></button></a>
+                      <a href="{{ url_for('admin.menus_item_edit', item_id=item.id) }}"><button type="button" class="btn bg-gradient-default btn-xs"><i class="fa-solid fa-pen-to-square"></i></button></a>
+                      <a href="{{ url_for('admin.menus_item_delete', item_id=item.id) }}"><button type="button" class="btn bg-gradient-default btn-xs"><i class="fa-solid fa-trash"></i></button></a></td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base-unauth.html" %}
+
+
+
+{% block content %}
+
+<body class="hold-transition sidebar-mini">
+
+<div class="wrapper">
+
+    <!-- Main content -->
+
+    <section class="content">
+
+      <div class="error-page">
+
+        <h2 class="headline text-warning"> 403</h2>
+
+
+
+        <div class="error-content">
+
+          <h3><i class="fas fa-exclamation-triangle text-warning"></i> Oops! Access denied.</h3>
+
+          <p>
+
+            Sorry, you don't have permission to view this page.
+
+            Meanwhile, you may <a href="/admin/">return to dashboard</a>.
+
+          </p>
+
+        </div>
+
+        <!-- /.error-content -->
+
+      </div>
+
+      <!-- /.error-page -->
+
+    </section>
+
+    <!-- /.content -->
+
+  </div>
+
+  <!-- /.content-wrapper -->
+
+{% endblock %}

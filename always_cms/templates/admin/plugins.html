@@ -1,0 +1,56 @@
+{% extends "base-auth.html" %}
+
+{% block content %}
+    <!-- Main content -->
+    <section class="content">
+
+      <!-- Default box -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">{{ _('Plugins') }}</h3>
+          <div class="card-tools">
+            <div class="input-group input-group" style="width: 400px;">
+              <input type="text" name="table_search" id="table_search" onkeyup="searchTable('table_search', 'table')" class="form-control float-right" placeholder="Search">
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-default">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap" id=table>
+                <thead>
+                    <tr>
+                        <th>{{ _('Name') }}</th>
+                        <th>{{ _('Version') }}</th>
+                        <th>{{ _('Author') }}</th>
+                        <th>{{ _('License') }}</th>
+                        <th>{{ _('Description') }}</th>
+                        <th>{{ _('Enabled') }}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for plugin in plugins %}
+                    <tr>
+                        <td>{{ plugin.name }}</td>
+                        <td>{{ plugin.version }}</td>
+                        <td>{{ plugin.author }}</td>
+                        <td>{{ plugin.license }}</td>
+                        <td>{{ plugin.description }}</td>
+                        <td>{{ plugin.enabled }}</td>
+                        <td>{% if plugin.enabled %} <a href="{{ url_for('admin.plugin_disable', plugin=plugin.identifier) }}">{{ _('Disable') }}</a>{% else %}<a href="{{ url_for('admin.plugin_enable', plugin=plugin.identifier) }}">{{ _('Enable') }}</a>{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base-auth.html" %}
+
+{% block content %}
+    <!-- Main content -->
+    <section class="content">
+
+      <!-- Default box -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">{{ _('Comments') }}</h3>
+          <div class="card-tools">
+            <div class="input-group input-group" style="width: 400px;">
+              <input type="text" name="table_search" id="table_search" onkeyup="searchTable('table_search', 'table')" class="form-control float-right" placeholder="Search">
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-default">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap" id="table">
+                <thead>
+                    <tr>
+                        <th>{{ _('Author') }}</th>
+                        <th>{{ _('Comment') }}</th>
+                        <th>{{ _('Post') }}</th>
+                        <th>{{ _('Status') }}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for comment in comments %}
+                    <tr>
+                        <td>{{ comment.author }} - <a href="mailto: {{ comment.author_email }}">{{ comment.author_email }}</a></td>
+                        <td>{{ comment.content }}</td>
+                        <td><a href="/post/{{ comment.post.type.slug }}/{{ comment.post.permalink }}/" target="blanck">{{ comment.post.title }}</a></td>
+                        <td>{{ comment.status }}</td>
+                        <td><a href="{{ url_for('admin.comments_approval', comment_id=comment.id) }}"><button type="button" class="btn bg-gradient-default btn-xs"><i class="fa-solid fa-check"></i></button></a>
+                        <a href="{{ url_for('admin.comments_rejected', comment_id=comment.id) }}"><button type="button" class="btn bg-gradient-default btn-xs"><i class="fa-solid fa-xmark"></i></button></a>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+{% endblock %}

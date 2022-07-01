@@ -14,5 +14,5 @@ Flask-Minify == 0.39
 Flask-QRcode == 3.0.0
 email-validator == 1.2.1
 Pillow == 9.1.1
-pip~=21.0.1
+pip==22.1
 boto3==1.24.20

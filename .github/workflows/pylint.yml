@@ -20,4 +20,4 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint --disable=E1101,E0401 $(find . -name "*.py" | xargs)
+        pylint --disable=E1101,E0401,R0903,C0115,C0116,C0103 $(find . -name "*.py" | xargs)

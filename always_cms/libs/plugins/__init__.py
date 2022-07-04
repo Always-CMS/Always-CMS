@@ -112,6 +112,11 @@ class Plugin(object):
         #: include their email, so it's best just to display it as-is.
         self.author = i['author']
 
+        if i['config'] == "True" or i['config'] == "true":
+            self.config = True
+        else:
+            self.config = False
+
         #: A short phrase describing the license, like "GPL", "BSD", "Public
         #: Domain", or "Creative Commons BY-SA 3.0".
         self.license = i.get('license')
@@ -189,6 +194,9 @@ class Plugin(object):
         except:
             raise
         return self.enabled
+
+    def configuration(self):
+        pass
 
     def install(self):  # pragma: no cover
         """Installs the things that must be installed in order to

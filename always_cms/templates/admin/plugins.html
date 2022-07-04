@@ -41,7 +41,7 @@
                         <td>{{ plugin.license }}</td>
                         <td>{{ plugin.description }}</td>
                         <td>{{ plugin.enabled }}</td>
-                        <td>{% if plugin.enabled %} <a href="{{ url_for('admin.plugin_disable', plugin=plugin.identifier) }}">{{ _('Disable') }}</a>{% else %}<a href="{{ url_for('admin.plugin_enable', plugin=plugin.identifier) }}">{{ _('Enable') }}</a>{% endif %}</td>
+                        <td>{% if plugin.enabled %} {% if plugin.config %}<a href="{{ url_for('admin.plugin_configuration', plugin=plugin.identifier) }}">{{ _('Configuration') }}</a>{% endif %} <a href="{{ url_for('admin.plugin_disable', plugin=plugin.identifier) }}">{{ _('Disable') }}</a>{% else %}<a href="{{ url_for('admin.plugin_enable', plugin=plugin.identifier) }}">{{ _('Enable') }}</a>{% endif %}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

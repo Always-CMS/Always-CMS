@@ -1,6 +1,5 @@
 # Always-CMS
 
-![pylint Score](https://github.com/Always-CMS/Always-CMS/actions/workflows/pylint.yml/badge.svg)
 ![CodeQL Status](https://github.com/Always-CMS/Always-CMS/actions/workflows/codeql-analysis.yml/badge.svg)
 ![Code Climate](https://codeclimate.com/github/Always-CMS/Always-CMS/badges/gpa.svg)
 

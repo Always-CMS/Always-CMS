@@ -16,13 +16,6 @@
                   <i class="fas fa-search"></i>
                 </button>
               </div>
-              {% if require_permission('users.edit') %}
-              <div class="input-group-append">
-                <a href="{{ url_for('admin.posts_new') }}"><button class="btn btn-primary btn">
-                  <i class="fa-solid fa-circle-plus"></i>
-                </button></a>
-              </div>
-              {% endif %}
             </div>
           </div>
         </div>

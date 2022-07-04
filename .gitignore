@@ -132,3 +132,7 @@ dmypy.json
 
 # Config file
 config.py
+
+# Upload files
+always_cms/uploads/*
+!always_cms/uploads/.gitkeep

@@ -33,3 +33,13 @@ def plugin_enable(plugin):
     plugin = get_plugin_from_all(plugin)
     plugin_manager.enable_plugins([plugin])
     return redirect(url_for('admin.plugins'))
+
+
+
+@admin.route("/admin/plugins/config/<plugin>")
+@login_required
+@require_permission('plugins.enable')
+def plugin_configuration(plugin):
+    plugin = get_plugin_from_all(plugin)
+    plugin.configuration()
+    return plugin.configuration()

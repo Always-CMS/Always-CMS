@@ -477,7 +477,7 @@ def add_event(event, callback, position='after'):
             connect_event('before-metadata-assembled',
                            on_before_metadata_assembled)
     """
-    add_filter(event, callback, position='after')
+    add_filter(event, callback, position)
 
 
 def do_event(event, *args, **kwargs):
@@ -511,7 +511,7 @@ def add_header(callback, position='after'):
             connect_event('before-metadata-assembled',
                            on_before_metadata_assembled)
     """
-    add_filter('header', callback, position='after')
+    add_filter('header', callback, position)
 
 
 def do_header(*args, **kwargs):
@@ -549,7 +549,7 @@ def add_footer(callback, position='after'):
             connect_event('before-metadata-assembled',
                            on_before_metadata_assembled)
     """
-    add_filter('footer', callback, position='after')
+    add_filter('footer', callback, position)
 
 
 def do_footer(*args, **kwargs):
@@ -587,7 +587,7 @@ def add_field_new_post(callback, position='after'):
             connect_event('before-metadata-assembled',
                            on_before_metadata_assembled)
     """
-    add_filter('header', callback, position='after')
+    add_filter('header', callback, position)
 
 
 def do_field_new_post(*args, **kwargs):

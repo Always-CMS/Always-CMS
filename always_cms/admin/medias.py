@@ -27,7 +27,6 @@ def medias_list():
 @admin.route('/admin/medias', methods=['POST'])
 @login_required
 @require_permission('medias.edit')
-@csrf.exempt
 def uploads():
     return medias.add()
 

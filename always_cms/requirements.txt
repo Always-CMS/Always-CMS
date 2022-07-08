@@ -16,3 +16,4 @@ email-validator == 1.2.1
 Pillow == 9.1.1
 pip==22.1
 boto3==1.24.20
+pycrypto==2.6.1

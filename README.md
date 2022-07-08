@@ -11,3 +11,4 @@ Always-CMS is an open source management system (CMS) build on Flask. This CMS is
  - SEO-friendly URLs and Sitemap auto generated
  - Image editors and S3 supported
  - Great security
+ - Support shortcodes in content pages/posts

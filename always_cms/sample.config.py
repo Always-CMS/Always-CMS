@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Sample of configuration file required for Always-CMS"""
 
 # SQL settings -  You can get this info from your web host
 SQLALCHEMY_DATABASE_URI = 'mysql://USERNAME:PASSWORD@HOSTNAME/DATABASE'

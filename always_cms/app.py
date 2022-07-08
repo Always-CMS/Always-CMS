@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from os import path
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -7,14 +9,13 @@ from flask_wtf.csrf import CSRFProtect
 from flask_dropzone import Dropzone
 from flask_babel import Babel
 from flask_minify import Minify
-from .libs.plugins import PluginManager
-from .libs.templates import TemplateManager
 from flask_ckeditor import CKEditor
 from flask_qrcode import QRcode
 
-from os import path
+from .libs.plugins import PluginManager
+from .libs.templates import TemplateManager
 
-# init SQLAlchemy so we can use it later in our models
+
 db = SQLAlchemy()
 csrf = CSRFProtect()
 plugin_manager = PluginManager()
@@ -74,12 +75,11 @@ def create_app():
     Babel(app)
 
     ckeditor.init_app(app)
-    
+
     QRcode(app)
 
     @login_manager.user_loader
     def load_user(user_id):
-        # since the user_id is just the primary key of our user table, use it in the query for the user
         return User.query.get(user_id)
 
     with app.app_context():

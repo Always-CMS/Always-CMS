@@ -3,7 +3,7 @@
 from os import path
 
 from urllib.parse import urlparse
-from flask import Blueprint, render_template, current_app, send_from_directory, abort, make_response, request
+from flask import Blueprint, render_template, url_for, redirect, flash, current_app, send_from_directory, abort, session
 from jinja2.exceptions import TemplateNotFound
 
 from always_cms.models import Post, Page, Type, Term
@@ -150,3 +150,10 @@ def sitemap():
     response.headers["Content-Type"] = "application/xml"
 
     return response
+
+  
+@main.route("/lang/<language_code>")
+def set_language(language_code):
+    if language_code in current_app.config['LANGUAGES']:
+        session['lang'] = language_code
+    return redirect(url_for('main.index'))

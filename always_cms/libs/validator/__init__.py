@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+""" Module used for validate some data"""
 
 from email_validator import validate_email, EmailNotValidError
 
-def email(email):
+
+def email(email_address):
     try:
-        validate_email(email).email
-        return True
+        return validate_email(email_address)
     except EmailNotValidError:
         return False

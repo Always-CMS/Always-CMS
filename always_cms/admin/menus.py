@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+""" Module used for manage menus used in front-office"""
 
 from flask_login import login_required
-from flask import render_template, redirect, url_for, flash, current_app, request
+from flask import render_template, redirect, url_for, request
 
 from always_cms.libs.roles import require_permission
 from always_cms.libs import menus
@@ -112,6 +113,7 @@ def menus_item_edit_post(item_id):
 def menus_delete(menu_id):
     menus.delete(menu_id)
     return redirect(url_for('admin.menus_list'))
+
 
 @admin.route("/admin/menus/item/delete/<item_id>")
 @login_required

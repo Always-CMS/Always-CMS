@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+""" Page module is used for manipulate Page objects"""
 
 from flask_login import login_required
 from flask import render_template, redirect, url_for, request

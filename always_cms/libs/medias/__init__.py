@@ -7,6 +7,7 @@ from random import randint
 from shutil import copyfile
 from werkzeug.utils import secure_filename
 from flask_ckeditor import upload_success, upload_fail
+from sqlalchemy.exc import IntegrityError
 
 from always_cms.libs import plugins
 from always_cms.libs.medias import pillow, s3
@@ -74,9 +75,12 @@ def add(file=None):
     # create a new media with the form data.
     new_media = Media(title=title, extension=extension)
 
-    # add the new media to the database
-    db.session.add(new_media)
-    db.session.commit()
+    try:
+        # add the new media to the database
+        db.session.add(new_media)
+        db.session.commit()
+    except IntegrityError:
+        return jsonify(error='Filename already used for another file'), 400
 
 
     if configurations.get('default_upload_location').value == 'local':

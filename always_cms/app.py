@@ -21,6 +21,7 @@ csrf = CSRFProtect()
 plugin_manager = PluginManager()
 template_manager = TemplateManager()
 ckeditor = CKEditor()
+babel = Babel()
 
 
 def create_app():
@@ -72,7 +73,7 @@ def create_app():
 
     csrf.init_app(app)
 
-    Babel(app)
+    babel.init_app(app)
 
     ckeditor.init_app(app)
 

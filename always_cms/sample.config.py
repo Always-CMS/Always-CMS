@@ -16,6 +16,7 @@ ALLOWED_EXTENSIONS = {
 }
 
 BABEL_DEFAULT_LOCALE = 'en'
+LANGUAGES = ['en', 'fr']
 
 # For developers: debugging mode.
 DEBUG = False

@@ -9,7 +9,7 @@ from markupsafe import Markup
 
 from always_cms.models import Post, Term, PostTerm, Type, Page
 from always_cms.libs import configurations, types, menus, plugins, medias
-
+from always_cms.app import babel
 
 @current_app.before_request
 def before_request_func():
@@ -89,6 +89,14 @@ def get_media_url(media_id):
     return medias.get_url(media_id)
 
 
+def do_event(event, *args, **kwargs):
+    return plugins.do_event(event, *args, **kwargs)
+
+
+def do_filter(event, *args, **kwargs):
+    return plugins.do_filter(event, *args, **kwargs)
+
+
 @current_app.context_processor
 def utility_processor():
     return dict(get_posts=get_posts,
@@ -101,5 +109,15 @@ def utility_processor():
     get_header=get_header,
     get_footer=get_footer,
     get_field_new_post=get_field_new_post,
-    get_media_url=get_media_url
+    get_media_url=get_media_url,
+    do_filter=do_filter,
+    do_event=do_event
     )
+
+
+@babel.localeselector
+def get_locale():
+    if 'lang' in session:
+        if session['lang'] in current_app.config['LANGUAGES']:
+            return session['lang']
+    return request.accept_languages.best_match(current_app.config['LANGUAGES'])

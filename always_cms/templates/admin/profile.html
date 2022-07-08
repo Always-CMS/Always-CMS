@@ -29,10 +29,11 @@
                     <label for="email">Email address</label>
                     <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
                   </div>
+                  {{ do_filter('extra_profile_identity', '') }}
                 </div>
                 <input type="hidden" name="block" value="identity">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <button type="submit" class="btn btn-primary">{{ _('Submit') }}</button>
+                <button type="submit" class="btn btn-primary btn-block">{{ _('Submit') }}</button>
               </form>
             </div>
             <!-- /.tab-pane -->
@@ -54,6 +55,7 @@
                     <label for="repeat_new_password">Repeat new password</label>
                     <input type="password" class="form-control" id="repeat_new_password" name="repeat_new_password" placeholder="Repeat new password">
                   </div>
+                  {{ do_filter('extra_profile_security', '') }}
                 </div>
                 <input type="hidden" name="block" value="security">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

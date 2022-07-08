@@ -1,6 +1,10 @@
+# -*- coding: utf-8 -*-
+"""Common functions for front-office Always-CMS"""
+
+from datetime import datetime
+
 from flask import current_app, request, abort, g, redirect
 from flask_plugins import get_plugin_from_all
-from datetime import datetime
 from markupsafe import Markup
 
 from always_cms.models import Post, Term, PostTerm, Type, Page
@@ -28,8 +32,8 @@ def get_posts_by_term(term):
     return Post.query.join(PostTerm).join(Term).filter(Term.name == term, PostTerm.term_id == Term.id, Post.id == PostTerm.post_id, Post.status == 'publish', Post.published_at <= datetime.now()).all()
 
 
-def get_posts_by_type(type):
-    return Post.query.join(Type).filter(Type.name == type, Post.type_id == Type.id, Post.status == 'publish', Post.published_at <= datetime.now()).all()
+def get_posts_by_type(post_type):
+    return Post.query.join(Type).filter(Type.name == post_type, Post.type_id == Type.id, Post.status == 'publish', Post.published_at <= datetime.now()).all()
 
 
 def get_pages():

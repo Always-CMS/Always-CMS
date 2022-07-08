@@ -89,6 +89,14 @@ def get_media_url(media_id):
     return medias.get_url(media_id)
 
 
+def do_event(event, *args, **kwargs):
+    return plugins.do_event(event, *args, **kwargs)
+
+
+def do_filter(event, *args, **kwargs):
+    return plugins.do_filter(event, *args, **kwargs)
+
+
 @current_app.context_processor
 def utility_processor():
     return dict(get_posts=get_posts,
@@ -101,5 +109,7 @@ def utility_processor():
     get_header=get_header,
     get_footer=get_footer,
     get_field_new_post=get_field_new_post,
-    get_media_url=get_media_url
+    get_media_url=get_media_url,
+    do_filter=do_filter,
+    do_event=do_event
     )

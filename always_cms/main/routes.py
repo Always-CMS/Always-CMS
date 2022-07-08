@@ -1,10 +1,12 @@
-from flask_login import login_required, current_user
-from flask import Blueprint, render_template, url_for, flash, current_app, send_from_directory, abort
-from jinja2.exceptions import TemplateNotFound
-import pyotp
-from os import path
-from always_cms.models import Post, Page, Type, Term
+# -*- coding: utf-8 -*-
 
+from os import path
+
+from urllib.parse import urlparse
+from flask import Blueprint, render_template, current_app, send_from_directory, abort, make_response, request
+from jinja2.exceptions import TemplateNotFound
+
+from always_cms.models import Post, Page, Type, Term
 from . import functions
 
 main = Blueprint('main', __name__,
@@ -101,15 +103,11 @@ def sitemap():
         lastmod and priority tags omitted on static pages.
         lastmod included on dynamic content such as blog posts.
     """
-    from flask import make_response, request, render_template
-    import datetime
-    from urllib.parse import urlparse
-
     host_components = urlparse(request.host_url)
     host_base = host_components.scheme + "://" + host_components.netloc
 
     # Static routes with static content
-    static_urls = list()
+    static_urls = []
     for rule in current_app.url_map.iter_rules():
         if not str(rule).startswith("/admin") and not str(rule).startswith("/user") and not str(rule).startswith("/sitemap"):
             if "GET" in rule.methods and len(rule.arguments) == 0:
@@ -119,7 +117,7 @@ def sitemap():
                 static_urls.append(url)
 
     # Dynamic routes with dynamic content
-    dynamic_urls = list()
+    dynamic_urls = []
     blog_posts = functions.get_posts()
 
     for post in blog_posts:

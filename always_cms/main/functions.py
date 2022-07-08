@@ -9,7 +9,7 @@ from markupsafe import Markup
 
 from always_cms.models import Post, Term, PostTerm, Type, Page
 from always_cms.libs import configurations, types, menus, plugins, medias
-
+from always_cms.app import babel
 
 @current_app.before_request
 def before_request_func():
@@ -113,3 +113,11 @@ def utility_processor():
     do_filter=do_filter,
     do_event=do_event
     )
+
+
+@babel.localeselector
+def get_locale():
+    if 'lang' in session:
+        if session['lang'] in current_app.config['LANGUAGES']:
+            return session['lang']
+    return request.accept_languages.best_match(current_app.config['LANGUAGES'])

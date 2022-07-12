@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 """Common functions for front-office Always-CMS"""
 
-from datetime import datetime
-
-from flask import current_app, request, abort, g, redirect
+from flask import current_app, request, abort, g, redirect, session
 from flask_plugins import get_plugin_from_all
+from datetime import datetime
 from markupsafe import Markup
 
 from always_cms.models import Post, Term, PostTerm, Type, Page
-from always_cms.libs import configurations, types, menus, plugins, medias
+from always_cms.libs import configurations, types, menus, plugins, medias, notifications
 from always_cms.app import babel
+
 
 @current_app.before_request
 def before_request_func():
@@ -97,6 +97,10 @@ def do_filter(event, *args, **kwargs):
     return plugins.do_filter(event, *args, **kwargs)
 
 
+def get_notifications():
+    return notifications.get_available()
+
+
 @current_app.context_processor
 def utility_processor():
     return dict(get_posts=get_posts,
@@ -111,7 +115,8 @@ def utility_processor():
     get_field_new_post=get_field_new_post,
     get_media_url=get_media_url,
     do_filter=do_filter,
-    do_event=do_event
+    do_event=do_event,
+    get_notifications=get_notifications
     )
 
 

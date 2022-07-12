@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from os import path
-
 from urllib.parse import urlparse
+from flask_login import login_required, current_user
 from flask import Blueprint, render_template, url_for, redirect, flash, current_app, send_from_directory, abort, session
+from flask import make_response, request
 from jinja2.exceptions import TemplateNotFound
-
 from always_cms.models import Post, Page, Type, Term
+from always_cms.app import shortcodes
+from always_cms.libs import configurations
+
 from . import functions
 
 main = Blueprint('main', __name__,
@@ -70,6 +73,7 @@ def page_not_found(e):
 @main.route('/post/<type>/<permalink>', strict_slashes=False)
 def get_post_content(type, permalink):
     post = Post.query.filter_by(permalink=permalink).first()
+    post.body = shortcodes.do_shortcode(post.body)
     if post:
         if post.model_id and post.model.name != "Default":
             try:
@@ -88,6 +92,7 @@ def get_post_content(type, permalink):
 @main.route('/page/<permalink>', strict_slashes=False)
 def get_page_content(permalink):
     page = Page.query.filter_by(permalink=permalink).first()
+    page.body = shortcodes.do_shortcode(page.body)
     if page:
         return render_template('%s/page.html' % current_app.config['TEMPLATE'], page=page)
     else:
@@ -103,6 +108,7 @@ def sitemap():
         lastmod and priority tags omitted on static pages.
         lastmod included on dynamic content such as blog posts.
     """
+
     host_components = urlparse(request.host_url)
     host_base = host_components.scheme + "://" + host_components.netloc
 
@@ -151,7 +157,14 @@ def sitemap():
 
     return response
 
-  
+
+@main.route('/robots.txt')
+def robots():
+    content = configurations.get('robots_txt')
+    response = make_response(content.value)
+    return response
+
+
 @main.route("/lang/<language_code>")
 def set_language(language_code):
     if language_code in current_app.config['LANGUAGES']:

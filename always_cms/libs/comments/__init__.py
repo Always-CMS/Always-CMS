@@ -78,7 +78,7 @@ def change_user_id(comment_id = None, source_user_id = None, destination_user_id
 
 def delete(comment_id):
     plugins.do_event("before_comment_delete", locals())
-    Comment.query.filter_by(comment_id=comment_id).delete()
+    Comment.query.filter_by(id=comment_id).delete()
     db.session.commit()
     plugins.do_event("after_comment_delete", locals())
     return True

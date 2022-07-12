@@ -67,6 +67,10 @@
                     <option value="False" {% if config.comments_moderation == "False" %}selected{% endif %}>{{ _('No') }}</option>
                   </select>
                 </div>
+                <div class="form-group">
+                  <label for="robots_txt">{{ _('Robots.txt') }}</label>
+                  <textarea class="form-control" id="robots_txt" name="robots_txt">{{ config.robots_txt }}</textarea>
+                </div>
             </div>
             <div class="card-header">
               <h3 class="card-title">Mail Server</h3>

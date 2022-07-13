@@ -44,6 +44,13 @@ def terms(term):
         abort(404)
 
 
+@main.route('/assets/<filename>')
+def assets_img(filename):
+    asset_path = path.join(
+        current_app.config['DEFAULT_FOLDER'], "templates/classic/assets/")
+    return send_from_directory(asset_path, filename)
+
+
 @main.route('/assets/css/<filename>')
 def assets_css(filename):
     asset_path = path.join(

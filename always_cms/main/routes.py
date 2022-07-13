@@ -46,22 +46,23 @@ def terms(term):
 
 @main.route('/assets/<filename>')
 def assets_img(filename):
+    print()
     asset_path = path.join(
-        current_app.config['DEFAULT_FOLDER'], "templates/classic/assets/")
+        current_app.config['DEFAULT_FOLDER'], ("templates/{}/assets/").format(current_app.config['TEMPLATE']) )
     return send_from_directory(asset_path, filename)
 
 
 @main.route('/assets/css/<filename>')
 def assets_css(filename):
     asset_path = path.join(
-        current_app.config['DEFAULT_FOLDER'], "templates/classic/assets/css/")
+        current_app.config['DEFAULT_FOLDER'], ("templates/{}/assets/css/").format(current_app.config['TEMPLATE']) )
     return send_from_directory(asset_path, filename)
 
 
 @main.route('/assets/js/<filename>')
 def assets_js(filename):
     asset_path = path.join(
-        current_app.config['DEFAULT_FOLDER'], "templates/classic/assets/js/")
+        current_app.config['DEFAULT_FOLDER'], ("templates/{}/assets/js/").format(current_app.config['TEMPLATE']) )
     return send_from_directory(asset_path, filename)
 
 

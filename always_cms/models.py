@@ -92,8 +92,8 @@ class Media(db.Model):
     id = db.Column(GUID, primary_key=True, default=uuid.uuid4)
     title = db.Column(db.String(1000), unique=True)
     extension = db.Column(db.String(5))
-    alt_text = db.Column(db.Text(), nullable=False)
-    description = db.Column(db.Text(), nullable=False)
+    alt_text = db.Column(db.Text(), nullable=False, default='')
+    description = db.Column(db.Text(), nullable=False, default='')
     created_at = db.Column(db.DateTime(timezone=True), default=func.now())
     updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now())
 
@@ -227,17 +227,17 @@ class Notification(db.Model):
 
 
 def insert_default_models(*args, **kwargs):
-    db.session.merge(Model(name='Default', slug='default'))
+    db.session.merge(Model(id='0267f036497a496db8ea4e048812a619', name='Default', slug='default'))
     db.session.commit()
 
 
 def insert_default_types(*args, **kwargs):
-    db.session.merge(Type(name='Articles', slug='articles', description='Default post type'))
+    db.session.merge(Type(id='0afa7d706c9945299bbe334771924df1', name='Articles', slug='articles', description='Default post type'))
     db.session.commit()
 
 
 def insert_default_menus(*args, **kwargs):
-    db.session.merge(Menu(name='Primary', location='primary'))
+    db.session.merge(Menu(id='013cba4274c447b6ad7d8e1815b09440', name='Primary', location='primary'))
     db.session.commit()
 
 

@@ -14,9 +14,9 @@ def get_all():
 
 
 def get_available():
-    user_role = current_user.role
+    user_role = current_user.role_id
     user_id = current_user.id
-    return Notification.query.filter_by(user_id=user_id).union( Notification.query.join(Ability).join(RoleAbility).join(Role).filter(Role.role == user_role, RoleAbility.role_id == Role.id, Notification.ability_id == RoleAbility.ability_id) )
+    return Notification.query.filter_by(user_id=user_id).union( Notification.query.join(Ability).join(RoleAbility).join(Role).filter(Role.id == user_role, RoleAbility.role_id == Role.id, Notification.ability_id == RoleAbility.ability_id) )
 
 
 def get(notification_id):

@@ -19,10 +19,10 @@ def require_permission(permission):
 
             is_allowed = False
 
-            user_role = current_user.role
+            user_role = current_user.role_id
 
             abilities = Ability.query.join(RoleAbility).join(Role).filter(
-                Role.role == user_role, RoleAbility.role_id == Role.id, Ability.id == RoleAbility.ability_id).all()
+                Role.id == user_role, RoleAbility.role_id == Role.id, Ability.id == RoleAbility.ability_id).all()
 
             for ability in abilities:
                 if ability.name == permission:
@@ -42,10 +42,10 @@ def require_permission_in_template(permission):
 
     is_allowed = False
 
-    user_role = current_user.role
+    user_role = current_user.role_id
 
     abilities = Ability.query.join(RoleAbility).join(Role).filter(
-        Role.role == user_role, RoleAbility.role_id == Role.id, Ability.id == RoleAbility.ability_id).all()
+        Role.id == user_role, RoleAbility.role_id == Role.id, Ability.id == RoleAbility.ability_id).all()
 
     for ability in abilities:
         if ability.name == permission:
@@ -117,8 +117,8 @@ def add_ability(role_id, ability_id):
     data = locals()
     data = plugins.do_filter("before_ability_add", data)
     get_role = get(data['role_id'])
-    user_role = current_user.role
-    if not get_role.role == user_role:
+    user_role = current_user.role_id
+    if not get_role.id == user_role:
         if not RoleAbility.query.filter_by(role_id=data['role_id'], ability_id=data['ability_id']).first():
             new_ability = RoleAbility(role_id=data['role_id'], ability_id=data['ability_id'])
             # add the new role to the database
@@ -134,13 +134,13 @@ def edit(role_id, role):
 
     get_role = get(data['role_id'])
 
-    user_role = current_user.role
+    user_role = current_user.role_id
 
     if not data['role']:
         flash(gettext('This role is empty. Please change role.'), 'warning')
     elif get_role is not None and str(get_role.id) != data['role_id']:
         flash(gettext('This role is already in use. Please change role.'), 'warning')
-    elif get_role.role == user_role:
+    elif get_role.id == user_role:
         flash(gettext("You cannot edit your own role."), 'warning')
     else:
         Role.query.filter_by(id=data['role_id']).update(dict(role=data['role']))
@@ -171,8 +171,8 @@ def delete_ability(role_id, ability_id):
     data = locals()
     data = plugins.do_filter("before_ability_delete", data)
     get_role = get(data['role_id'])
-    user_role = current_user.role
-    if not get_role.role == user_role:
+    user_role = current_user.role_id
+    if not get_role.id == user_role:
         RoleAbility.query.filter_by(role_id=data['role_id'], ability_id=data['ability_id']).delete()
         db.session.commit()
     plugins.do_event("after_ability_delete", locals())

@@ -21,6 +21,7 @@ Always-CMS is an open source management system (CMS) build on Flask. This CMS is
  - Native-support of minifier (HTML, CSS and JS)
 
 ### Content
+ - Search features in administration pages
  - Schedule publication
  - Create custom post-type
  - Create model pages/posts

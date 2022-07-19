@@ -4,10 +4,10 @@ from flask import flash
 from flask_login import current_user
 from sqlalchemy import or_, and_
 
-from always_cms.libs import plugins, comments, users, roles
+from always_cms.libs import plugins, comments, users
 from always_cms.app import db
 from always_cms.models import Notification, RoleAbility, Role, User, Ability
-
+from always_cms.libs.roles import require_permission
 
 def get_all():
     return Notification.query.all()

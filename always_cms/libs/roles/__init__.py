@@ -118,7 +118,7 @@ def add_ability(role_id, ability_id):
     data = plugins.do_filter("before_ability_add", data)
     get_role = get(data['role_id'])
     user_role = current_user.role_id
-    if not get_role.id == user_role:
+    if get_role.id != user_role:
         if not RoleAbility.query.filter_by(role_id=data['role_id'], ability_id=data['ability_id']).first():
             new_ability = RoleAbility(role_id=data['role_id'], ability_id=data['ability_id'])
             # add the new role to the database
@@ -140,7 +140,7 @@ def edit(role_id, role):
         flash(gettext('This role is empty. Please change role.'), 'warning')
     elif get_role is not None and str(get_role.id) != data['role_id']:
         flash(gettext('This role is already in use. Please change role.'), 'warning')
-    elif get_role.id == user_role:
+    elif get_role is not None and get_role.id == user_role:
         flash(gettext("You cannot edit your own role."), 'warning')
     else:
         Role.query.filter_by(id=data['role_id']).update(dict(role=data['role']))
@@ -172,7 +172,7 @@ def delete_ability(role_id, ability_id):
     data = plugins.do_filter("before_ability_delete", data)
     get_role = get(data['role_id'])
     user_role = current_user.role_id
-    if not get_role.id == user_role:
+    if get_role.id != user_role:
         RoleAbility.query.filter_by(role_id=data['role_id'], ability_id=data['ability_id']).delete()
         db.session.commit()
     plugins.do_event("after_ability_delete", locals())

@@ -135,7 +135,6 @@ def utility_processor():
 
 @babel.localeselector
 def get_locale():
-    if 'lang' in session:
-        if session['lang'] in current_app.config['LANGUAGES']:
-            return session['lang']
+    if 'lang' in session and session['lang'] in current_app.config['LANGUAGES']:
+        return session['lang']
     return request.accept_languages.best_match(current_app.config['LANGUAGES'])

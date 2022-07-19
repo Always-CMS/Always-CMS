@@ -2,7 +2,6 @@
 """Common functions for front-office Always-CMS"""
 
 from flask import current_app, request, abort, g, redirect, session
-from flask_plugins import get_plugin_from_all
 from datetime import datetime
 from markupsafe import Markup
 
@@ -18,7 +17,7 @@ def before_request_func():
         return redirect(url, code=301)
     if request.blueprint is not None and 'plugin_' in request.blueprint:
         plugin_identifier = str(request.blueprint).split('_', 1)[1]
-        plugin = get_plugin_from_all(plugin_identifier)
+        plugin = plugins.get_plugin_from_all(plugin_identifier)
         if not plugin.enabled:
             abort(404)
     g.always_cms_config = configurations.get_all()
@@ -29,6 +28,7 @@ def add_security_header(response):
     response.headers['X-Frame-Options'] = "SAMEORIGIN"
     response.headers['X-Content-Type-Options'] = "nosniff"
     response.headers['Strict-Transport-Security'] = "max-age=63072000; includeSubDomains; preload"
+    response.headers['Access-Control-Allow-Origin'] = "*"
     return response
 
 

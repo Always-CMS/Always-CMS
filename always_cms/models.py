@@ -211,3 +211,16 @@ class MenuItem(db.Model):
     
     menu = db.relationship("Menu", foreign_keys=[menu_id])
     child = db.relationship("MenuItem", foreign_keys=[parent_id], cascade='all, delete')
+
+
+class Notification(db.Model):
+    id = db.Column(GUID, primary_key=True, default=uuid.uuid4)
+    object_type = db.Column(db.String(50))
+    object_comment_id = db.Column(GUID, db.ForeignKey('comment.id'), nullable=True)
+    object_user_id = db.Column(GUID, db.ForeignKey('user.id'), nullable=True)
+    user_id = db.Column(GUID, db.ForeignKey('user.id'), nullable=True)
+    ability_id = db.Column(GUID, db.ForeignKey('ability.id'), nullable=True)
+    message = db.Column(db.String(255))
+    created_at = db.Column(db.DateTime(timezone=True), default=func.now())
+
+    ability = db.relationship("Ability", foreign_keys=[ability_id])

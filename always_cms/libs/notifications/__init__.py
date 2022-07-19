@@ -2,10 +2,11 @@
 
 from flask import flash
 from flask_login import current_user
+from sqlalchemy import or_, and_
 
-from always_cms.libs import plugins, comments, users
+from always_cms.libs import plugins, comments, users, roles
 from always_cms.app import db
-from always_cms.models import Notification
+from always_cms.models import Notification, RoleAbility, Role, User, Ability
 
 
 def get_all():
@@ -13,17 +14,20 @@ def get_all():
 
 
 def get_available():
+    user_role = current_user.role_id
     user_id = current_user.id
-    return Notification.query.filter_by(user_id=user_id)
+    return Notification.query.filter_by(user_id=user_id).union( Notification.query.join(Ability).join(RoleAbility).join(Role).filter(Role.id == user_role, RoleAbility.role_id == Role.id, Notification.ability_id == RoleAbility.ability_id) )
 
 
 def get(notification_id):
     notification = Notification.query.filter_by(id=notification_id).first()
-    if notification.user_id != None and user_id != current_user.id:
-        return False
+    if notification == None or ( notification.user_id != None and notification.user_id != current_user.id and notification.ability_id != None and not require_permission(notification.ability.name) ):
+        return None
+    else:
+        return notification
 
 
-def add(object_type, object_id, user_id = None, ability_id = None):
+def add(object_type, object_id, message, user_id = None, ability_id = None):
     
     data = plugins.do_filter("before_notification_add", locals())
     
@@ -38,12 +42,20 @@ def add(object_type, object_id, user_id = None, ability_id = None):
     
     if data['object_type'] == 'comment' and not comments.get(data['object_id']):
         return False
+    elif data['object_type'] == 'comment':
+        data['object_comment_id'] = data['object_id']
+        data['object_user_id'] = None
     
     if data['object_type'] == 'user' and not users.get(data['object_id']):
         return False
+    elif data['object_type'] == 'user':
+        data['object_comment_id'] = None
+        data['object_user_id'] = data['object_id']
     
     new_notification = Notification(object_type=data['object_type'],
-    object_id=data['object_id'],
+    message=data['message'],
+    object_comment_id=data['object_comment_id'],
+    object_user_id=data['object_user_id'],
     user_id=data['user_id'],
     ability_id=data['ability_id'])
     

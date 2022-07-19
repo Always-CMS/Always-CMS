@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Always CMS</title>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
@@ -103,7 +104,7 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="info">
-          <a href="#" class="d-block">{{ current_user.name }}</a>
+          <a href="{{ url_for('admin.profile') }}" class="d-block">{{ current_user.name }}</a>
         </div>
       </div>
 
@@ -252,6 +253,16 @@
             </a>
           </li>
           {% endif %}
+          {% if require_permission('roles.list') %}
+          <li class="nav-item">
+            <a href="{{ url_for('admin.roles_list') }}" class="nav-link">
+              <i class="fa-solid fa-user-group"></i>
+              <p>
+                Roles
+              </p>
+            </a>
+          </li>
+          {% endif %}
           {% if require_permission('configuration') %}
           <li class="nav-item">
             <a href="{{ url_for('admin.configurations_edit') }}" class="nav-link">
@@ -303,9 +314,9 @@
   <!-- /.content-wrapper -->
   <footer class="main-footer">
     <div class="float-right d-none d-sm-block">
-      <b>Version</b> 1.0
+      <b>Version</b> {{ config.VERSION }}
     </div>
-    <strong>Powered with <i class="fas fa-heart"></i> by <a href="https://adminlte.io">Always CMS</a>.</strong>
+    <strong>Powered with <i class="fas fa-heart"></i> by <a href="https://github.com/Always-CMS/Always-CMS">Always CMS</a>.</strong>
   </footer>
 </div>
 <!-- ./wrapper -->

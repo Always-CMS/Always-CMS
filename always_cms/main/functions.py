@@ -7,7 +7,7 @@ from datetime import datetime
 from markupsafe import Markup
 
 from always_cms.models import Post, Term, PostTerm, Type, Page
-from always_cms.libs import configurations, types, menus, plugins, medias, notifications
+from always_cms.libs import configurations, types, menus, plugins, medias, notifications, updater
 from always_cms.app import babel
 
 
@@ -22,6 +22,14 @@ def before_request_func():
         if not plugin.enabled:
             abort(404)
     g.always_cms_config = configurations.get_all()
+
+
+@current_app.after_request
+def add_security_header(response):
+    response.headers['X-Frame-Options'] = "SAMEORIGIN"
+    response.headers['X-Content-Type-Options'] = "nosniff"
+    response.headers['Strict-Transport-Security'] = "max-age=63072000; includeSubDomains; preload"
+    return response
 
 
 def get_posts():
@@ -101,6 +109,10 @@ def get_notifications():
     return notifications.get_available()
 
 
+def new_version_available():
+    return updater.new_version_available()
+
+
 @current_app.context_processor
 def utility_processor():
     return dict(get_posts=get_posts,
@@ -116,7 +128,8 @@ def utility_processor():
     get_media_url=get_media_url,
     do_filter=do_filter,
     do_event=do_event,
-    get_notifications=get_notifications
+    get_notifications=get_notifications,
+    new_version_available=new_version_available
     )
 
 

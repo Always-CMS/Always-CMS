@@ -70,19 +70,19 @@ def add():
         return False
 
     if User.query.count() == 0:
-        role = 'Administrator'
+        role_id = '1ee1d471-75eb-4f9f-8086-de176f6898f9'
     else:
-        role = 'Membership'
+        role_id = configurations.get('default_users_role').value
 
     # create a new user with the form data.
     new_user = User(name=name, email=email, password=generate_password_hash(
-        password, method='sha256'), role=role)
+        password, method='sha256'), role_id=role_id)
 
     # add the new user to the database
     db.session.add(new_user)
     db.session.commit()
 
-    user_meta_registration_key = UserMeta(user_id=new_user.id, name='registration_key', value=uuid4.hex)
+    user_meta_registration_key = UserMeta(user_id=new_user.id, name='registration_key', value=uuid4)
 
     if configurations.get('registration_confirmation').value == "False":
         user_meta_registration_confirmed = UserMeta(user_id=new_user.id, name='registration_confirmed', value='True')

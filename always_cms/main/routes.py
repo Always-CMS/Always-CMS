@@ -8,7 +8,7 @@ from flask import make_response, request
 from jinja2.exceptions import TemplateNotFound
 from always_cms.models import Post, Page, Type, Term
 from always_cms.app import shortcodes
-from always_cms.libs import configurations
+from always_cms.libs import configurations, comments
 
 from . import functions
 
@@ -44,17 +44,24 @@ def terms(term):
         abort(404)
 
 
+@main.route('/assets/<filename>')
+def assets_img(filename):
+    asset_path = path.join(
+        current_app.config['DEFAULT_FOLDER'], ("templates/{}/assets/").format(current_app.config['TEMPLATE']) )
+    return send_from_directory(asset_path, filename)
+
+
 @main.route('/assets/css/<filename>')
 def assets_css(filename):
     asset_path = path.join(
-        current_app.config['DEFAULT_FOLDER'], "templates/classic/assets/css/")
+        current_app.config['DEFAULT_FOLDER'], ("templates/{}/assets/css/").format(current_app.config['TEMPLATE']) )
     return send_from_directory(asset_path, filename)
 
 
 @main.route('/assets/js/<filename>')
 def assets_js(filename):
     asset_path = path.join(
-        current_app.config['DEFAULT_FOLDER'], "templates/classic/assets/js/")
+        current_app.config['DEFAULT_FOLDER'], ("templates/{}/assets/js/").format(current_app.config['TEMPLATE']) )
     return send_from_directory(asset_path, filename)
 
 
@@ -97,6 +104,30 @@ def get_page_content(permalink):
         return render_template('%s/page.html' % current_app.config['TEMPLATE'], page=page)
     else:
         abort(404)
+
+
+@main.route('/post/<type>/<permalink>', strict_slashes=False,  methods=['POST'])
+def post_content_comment(type, permalink):
+    content = request.form.get('content')
+
+    if content is None:
+        return redirect(url_for('main.get_post_content', type=type, permalink=permalink))
+
+    if current_user.is_authenticated:
+        user_id = current_user.id
+        author = None
+        author_email = None
+    else:
+        author = request.form.get('author')
+        author_email = request.form.get('author_email')
+        user_id = None
+        if author is None and author_email is None:
+            return redirect(url_for('main.get_post_content', type=type, permalink=permalink))
+
+    post = Post.query.filter_by(permalink=permalink).first()
+    author_ip = request.remote_addr
+    comments.add(content, post.id, None, user_id, author, author_email, author_ip)
+    return redirect(url_for('main.get_post_content', type=type, permalink=permalink))
 
 
 @main.route("/sitemap")

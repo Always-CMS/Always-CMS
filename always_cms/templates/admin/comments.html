@@ -33,12 +33,17 @@
                 <tbody>
                     {% for comment in comments %}
                     <tr>
+                        {% if comment.user_id %}
+                        <td>{{ comment.user.name }} - <a href="mailto: {{ comment.user.email }}">{{ comment.user.email }}</a></td>
+                        {% else %}
                         <td>{{ comment.author }} - <a href="mailto: {{ comment.author_email }}">{{ comment.author_email }}</a></td>
+                        {% endif %}
                         <td>{{ comment.content }}</td>
                         <td><a href="/post/{{ comment.post.type.slug }}/{{ comment.post.permalink }}/" target="blanck">{{ comment.post.title }}</a></td>
                         <td>{{ comment.status }}</td>
                         <td><a href="{{ url_for('admin.comments_approval', comment_id=comment.id) }}"><button type="button" class="btn bg-gradient-default btn-xs"><i class="fa-solid fa-check"></i></button></a>
                         <a href="{{ url_for('admin.comments_rejected', comment_id=comment.id) }}"><button type="button" class="btn bg-gradient-default btn-xs"><i class="fa-solid fa-xmark"></i></button></a>
+                        <a href="{{ url_for('admin.comments_delete', comment_id=comment.id) }}"><button type="button" class="btn bg-gradient-default btn-xs"><i class="fa-solid fa-trash"></i></button></a>
                     </tr>
                     {% endfor %}
                 </tbody>

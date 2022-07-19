@@ -3,7 +3,7 @@
 from collections import namedtuple
 
 from always_cms.libs import plugins
-from always_cms.app import db
+from always_cms.app import db, minify
 from always_cms.models import Configuration
 
 
@@ -42,3 +42,14 @@ def delete(name):
     db.session.commit()
     plugins.do_event("after_configuration_delete", locals())
     return True
+
+
+def set_minifier(state):
+    if state == "True":
+        minify.html = True
+        minify.js = True
+        minify.cssless = True
+    else:
+        minify.html = False
+        minify.js = False
+        minify.cssless = False

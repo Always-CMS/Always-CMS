@@ -103,7 +103,23 @@
           <!-- /.Left col -->
           <!-- right col -->
           <section class="col-lg-5">
-
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">
+                  <i class="fa-solid fa-pen"></i>
+                  {{ _('Update') }}
+                </h3>
+              </div><!-- /.card-header -->
+              <div class="card-body">
+                {% set new_version_available = new_version_available() %}
+                {% if new_version_available %}
+                <p>{{ _('A new version is available. You should install it : ') }}<a href="https://github.com/Always-CMS/Always-CMS/releases/tag/{{ new_version_available }}" target="_blanck">{{ new_version_available }}</a></p>
+                {% else %}
+                <p>{{ _('Congratulations you are in the latest version available.') }}</p>
+                {% endif %}
+              </div><!-- /.card-body -->
+            </div>
+            <!-- /.card -->
           </section>
           <!-- right col -->
         </div>

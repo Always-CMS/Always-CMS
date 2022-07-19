@@ -27,6 +27,7 @@ from . import types
 from . import comments
 from . import menus
 from . import notifications
+from . import roles
 
 register_context_processors()
 

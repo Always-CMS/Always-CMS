@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from os import path
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -9,24 +7,29 @@ from flask_wtf.csrf import CSRFProtect
 from flask_dropzone import Dropzone
 from flask_babel import Babel
 from flask_minify import Minify
+from .libs.plugins import PluginManager
+from .libs.templates import TemplateManager
+from .libs.shortcodes import Shortcodes
 from flask_ckeditor import CKEditor
 from flask_qrcode import QRcode
 
-from .libs.plugins import PluginManager
-from .libs.templates import TemplateManager
+from os import path
 
-
+# init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
 csrf = CSRFProtect()
 plugin_manager = PluginManager()
 template_manager = TemplateManager()
 ckeditor = CKEditor()
+shortcodes = Shortcodes()
 babel = Babel()
-
+minify = Minify()
 
 def create_app():
     app = Flask(__name__)
     app.config.from_pyfile('config.py')
+
+    app.config['VERSION'] = '1.0.0'
 
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -58,7 +61,8 @@ def create_app():
         Model,\
         Comment,\
         Menu,\
-        MenuItem
+        MenuItem,\
+        Notification
 
     db.create_all(app=app)
 
@@ -81,6 +85,7 @@ def create_app():
 
     @login_manager.user_loader
     def load_user(user_id):
+        # since the user_id is just the primary key of our user table, use it in the query for the user
         return User.query.get(user_id)
 
     with app.app_context():
@@ -96,9 +101,15 @@ def create_app():
             name='template').first().value
 
         if Configuration.query.filter_by(name='minify_template').first().value == 'True':
-            Minify(app=app, html=True, js=True, cssless=True)
+            minify.init_app(app)
+            minify.html = True
+            minify.js = True
+            minify.cssless = True
         else:
-            Minify(app=app, html=False, js=False, cssless=False)
+            minify.init_app(app)
+            minify.html = False
+            minify.js = False
+            minify.cssless = False
 
     plugin_manager.init_app(app)
 

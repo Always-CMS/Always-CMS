@@ -32,3 +32,11 @@ def comments_approval(comment_id):
 def comments_rejected(comment_id):
     comments.rejected(comment_id)
     return redirect(url_for('admin.comments_list'))
+
+
+@admin.route('/admin/comments/delete/<comment_id>')
+@login_required
+@require_permission('comments.edit')
+def comments_delete(comment_id):
+    comments.delete(comment_id)
+    return redirect(url_for('admin.comments_list'))

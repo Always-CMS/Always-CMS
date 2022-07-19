@@ -14,9 +14,11 @@ def redirect_notification(notification_id):
     if notification == None:
         return redirect(url_for('admin.index'))
     else:
-        notifications.delete(notification_id)
-        if notification.object_id == 'user':
+        if notification.object_type == 'user':
+            notifications.delete(notification_id)
             return redirect(url_for('admin.users_list'))
-        if notification.object_id == 'comment':
+        if notification.object_type == 'comment':
+            notifications.delete(notification_id)
             return redirect(url_for('admin.comments_list'))
+    notifications.delete(notification_id)
     return redirect(url_for('admin.index'))

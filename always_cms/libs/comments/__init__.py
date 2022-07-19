@@ -2,13 +2,13 @@
 
 from flask import flash
 
-from always_cms.libs import configurations, plugins
+from always_cms.libs import configurations, plugins, notifications, roles
 from always_cms.app import db
 from always_cms.models import Comment
 
 
 def get_all():
-    return Comment.query.all()
+    return Comment.query.order_by(db.desc(Comment.created_at)).all()
 
 
 def get(comment_id):
@@ -23,10 +23,9 @@ def get_by_post(post_id, status='approved'):
 
 
 def add(content, post_id, parent_id=None, user_id=None, author=None, author_email=None, author_ip=None):
-
     data = plugins.do_filter("before_comment_add", locals())
 
-    if configurations.get('comments_enabled') == "False":
+    if configurations.get('comments_enabled').value == "False":
         flash('You cannot post comments because they are disabled.', 'warning')
         return False
     if not content:
@@ -35,25 +34,28 @@ def add(content, post_id, parent_id=None, user_id=None, author=None, author_emai
     if not post_id:
         flash('A comment must be linked to a post. Please define a post.', 'warning')
         return False
-    if not user_id or (not author or not author_email):
+
+    if not user_id and (not author or not author_email):
         flash('You cannot post a comment without an author.', 'warning')
         return False
 
-    if configurations.get('comments_moderation') == "True":
-        status = "pending"
+    if configurations.get('comments_moderation').value == "True":
+        data['status'] = "pending"
     else:
-        status = "approved"
+        data['status'] = "approved"
 
-    new_comment = Comment(post_id=data['post_id'],
+    new_comment = Comment(content=data['content'],
+                          post_id=data['post_id'],
                           status=data['status'],
                           user_id=data['user_id'],
                           author=data['author'],
                           author_email=data['author_email'],
                           author_ip=data['author_ip'],
                           parent_id=data['parent_id'])
-
     db.session.add(new_comment)
     db.session.commit()
+
+    notifications.add('comment', new_comment.id, 'New comment available', ability_id=roles.get_ability('comments.edit').id)
 
     plugins.do_event("after_comment_add", new_comment)
 
@@ -71,15 +73,14 @@ def change_user_id(comment_id = None, source_user_id = None, destination_user_id
         else:
             Comment.query.filter(
                 Comment.id==comment_id, Comment.user_id==source_user_id).update(dict(user_id=destination_user_id))
-        
     db.session.commit()
-    
 
 
 def delete(comment_id):
     plugins.do_event("before_comment_delete", locals())
     Comment.query.filter_by(id=comment_id).delete()
     db.session.commit()
+    flash('The comment has been deleted.', 'success')
     plugins.do_event("after_comment_delete", locals())
     return True
 

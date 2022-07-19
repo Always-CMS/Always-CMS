@@ -5,6 +5,7 @@ from urllib.parse import urlparse
 from flask_login import login_required, current_user
 from flask import Blueprint, render_template, url_for, redirect, flash, current_app, send_from_directory, abort, session
 from flask import make_response, request
+from werkzeug.urls import url_parse
 from jinja2.exceptions import TemplateNotFound
 from always_cms.models import Post, Page, Type, Term
 from always_cms.app import shortcodes
@@ -67,6 +68,8 @@ def assets_js(filename):
 
 @main.route('/uploads/<filename>')
 def uploaded_files(filename):
+    if configurations.get('prevent_hotlinking').value == "True" and (request.referrer is None or url_parse(request.referrer).host != request.host):
+        abort(404)
     path = current_app.config['UPLOAD_FOLDER']
     return send_from_directory(path, filename)
 

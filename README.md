@@ -13,6 +13,8 @@ Always-CMS is an open source management system (CMS) build on Flask. This CMS is
  - HTTPS Support
  - Configure if comments are available
  - Configure if users can register
+ - Multi-Factor authentication
+ - Prevent hotlinking
 
 ### SEO
  - URLs friendly

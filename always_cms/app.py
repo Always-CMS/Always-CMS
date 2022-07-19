@@ -2,14 +2,16 @@
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from sqlalchemy.event import listen
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
 from flask_dropzone import Dropzone
 from flask_babel import Babel
 from flask_minify import Minify
-from .libs.plugins import PluginManager
-from .libs.templates import TemplateManager
-from .libs.shortcodes import Shortcodes
+from always_cms.libs.plugins import PluginManager
+from always_cms.libs.templates import TemplateManager
+from always_cms.libs.shortcodes import Shortcodes
 from flask_ckeditor import CKEditor
 from flask_qrcode import QRcode
 
@@ -17,6 +19,7 @@ from os import path
 
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
+migrate = Migrate()
 csrf = CSRFProtect()
 plugin_manager = PluginManager()
 template_manager = TemplateManager()
@@ -44,27 +47,9 @@ def create_app():
     app.config['CKEDITOR_ENABLE_CSRF'] = True
 
     db.init_app(app)
+    migrate.init_app(app, db)
 
-    from .models import Configuration,\
-        Role,\
-        Ability,\
-        RoleAbility,\
-        User,\
-        UserMeta,\
-        Media,\
-        MediaMeta,\
-        Post,\
-        Page,\
-        Type,\
-        Term,\
-        PostTerm,\
-        Model,\
-        Comment,\
-        Menu,\
-        MenuItem,\
-        Notification
-
-    db.create_all(app=app)
+    from .models import Configuration, User, create_tables
 
     login_manager = LoginManager()
     login_manager.blueprint_login_views = {
@@ -89,6 +74,9 @@ def create_app():
         return User.query.get(user_id)
 
     with app.app_context():
+        # init database
+        create_tables()
+
         # blueprint for admin routes
         from .admin import routes as admin_blueprint
         app.register_blueprint(admin_blueprint.admin)

@@ -6,9 +6,9 @@ from flask_plugins import get_plugin_from_all
 from datetime import datetime
 from markupsafe import Markup
 
-from always_cms.models import Post, Term, PostTerm, Type, Page
+from always_cms.models import *
 from always_cms.libs import configurations, types, menus, plugins, medias, notifications, updater
-from always_cms.app import babel
+from always_cms.app import babel, db
 
 
 @current_app.before_request

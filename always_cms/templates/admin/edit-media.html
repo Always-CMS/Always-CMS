@@ -11,7 +11,7 @@
         </div>
         <div class="card-body">
           <div class="text-center">
-            <img src="{{ url_for('main.uploaded_files', filename='{}-work.{}'.format(media.id, media.extension) ) }}" style="width: 50%;">
+            <img src="{{ url_for('main.uploaded_files', filename='{}-work.{}'.format(media.id, media.extension) ) }}" style="width: 50%;" alt="Image Edition">
           </div>
           <form method="post">
             <div class="form-group">

@@ -24,6 +24,13 @@
                   <textarea class="form-control" id="short_description" name="short_description">{{ config.short_description }}</textarea>
                 </div>
                 <div class="form-group">
+                  <label for="translation">{{ _('Social Share') }}</label>
+                  <select class="custom-select rounded-0" id="social_network_share" name="social_network_share">
+                    <option value="True" {% if config.social_network_share == "True" %}selected{% endif %}>{{ _('Yes') }}</option>
+                    <option value="False" {% if config.social_network_share == "False" %}selected{% endif %}>{{ _('No') }}</option>
+                  </select>
+                </div>
+                <div class="form-group">
                   <label for="date_format">{{ _('Date format') }}</label>
                   <input type="text" class="form-control" id="date_format" name="date_format" value="{{ config.date_format }}">
                 </div>
@@ -99,6 +106,13 @@
                 <div class="form-group">
                   <label for="robots_txt">{{ _('Robots.txt') }}</label>
                   <textarea class="form-control" id="robots_txt" name="robots_txt">{{ config.robots_txt }}</textarea>
+                </div>
+                <div class="form-group">
+                  <label for="translation">{{ _('Prevent hotlinking') }}</label>
+                  <select class="custom-select rounded-0" id="prevent_hotlinking" name="prevent_hotlinking">
+                    <option value="True" {% if config.prevent_hotlinking == "True" %}selected{% endif %}>{{ _('Yes') }}</option>
+                    <option value="False" {% if config.prevent_hotlinking == "False" %}selected{% endif %}>{{ _('No') }}</option>
+                  </select>
                 </div>
             </div>
             <div class="card-header">
